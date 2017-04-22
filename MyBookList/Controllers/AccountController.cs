@@ -9,6 +9,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyBookList.Models;
+using System.Collections.Generic;
+using MyBookList.ViewModels;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 namespace MyBookList.Controllers
 {
@@ -17,7 +22,7 @@ namespace MyBookList.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private ApplicationDbContext db = new ApplicationDbContext();
         public AccountController()
         {
         }
@@ -76,19 +81,62 @@ namespace MyBookList.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+
+            if (result == SignInStatus.Success)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                return RedirectToAction("Index", "Books");
             }
+            else
+            {
+                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+                SqlCommand comd = new SqlCommand("spLoginUser", con);
+                comd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter parUser = new SqlParameter("@UserName", model.Email);
+
+                comd.Parameters.Add(parUser);
+
+                con.Open();
+                SqlDataReader dr = comd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    int reattm = Convert.ToInt32(dr["retryattem"]);
+                    if (Convert.ToBoolean(dr["accountLock"]))
+                    {
+                        @ViewBag.errorMessage = "Account is locked, contact Admin";
+                        return View("Error");
+                    }
+                    else if (reattm > 0)
+                    {
+                        int atemLeft = (4 - reattm);
+
+                        @ViewBag.errorMessage = "Wrong Password OR UserName" + " " + "You have" + " " + atemLeft + " " + " Attemts Left";
+                        return View("Error");
+
+                    }
+                    else if (Convert.ToBoolean(dr["authenticated"]))
+                    {
+                        return RedirectToAction("Index", "Books");
+                    }
+
+                }
+            }
+
+            //switch (result)
+            //{
+            //    case SignInStatus.Success:
+            //        return RedirectToAction("Index", "Books");
+            //    case SignInStatus.LockedOut:
+            //        return View("Lockout");
+            //    case SignInStatus.RequiresVerification:
+            //        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+            //    case SignInStatus.Failure:
+            //    default:
+            //        ModelState.AddModelError("", "Invalid login attempt.");
+            //        return View(model);
+            //}
+            return View(model);
         }
 
         //
@@ -124,6 +172,7 @@ namespace MyBookList.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+
                     return RedirectToLocal(model.ReturnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -151,7 +200,7 @@ namespace MyBookList.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Name = model.Name, PhoneNumber = model.PhoneNumber, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -163,7 +212,8 @@ namespace MyBookList.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Books");
+
                 }
                 AddErrors(result);
             }
@@ -184,6 +234,143 @@ namespace MyBookList.Controllers
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
+
+
+        // ----------------------------------------------------------------- Users have different roles - Start ------------------------------------------------------------------------
+       
+            //the role and roleUsers  all 6 methods are inspired from..
+        //.http://www.dotnetfunda.com/articles/show/2898/working-with-roles-in-aspnet-identity-for-mvc 
+
+        // creating rolles
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleCreate()
+        {
+            List<string> rol = new List<string>();
+            foreach (var i in db.Roles)
+            {
+                rol.Add(i.Name);
+            }
+            ViewBag.listRole = rol;
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleCreate(string RoleNamn)
+        {
+            if (!string.IsNullOrEmpty(RoleNamn))
+            {
+
+                try
+                {
+                    db.Roles.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole()
+                    {
+                        Name = RoleNamn
+
+                    });
+                    db.SaveChanges();
+
+                    return RedirectToAction("RoleCreate");
+                }
+                catch
+                {
+
+                }
+            }
+            return View();
+        }
+
+        //Role And User Index
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleUserIndex()
+        {
+            RoleAndUserManagerVm rum = new RoleAndUserManagerVm();
+            rum.UsersRole = new List<string>();
+            rum.UsersEmailName = new List<string>();
+            rum.UsersName = new List<string>();
+
+            foreach (var useres in db.Users)
+            {
+                ViewBag.roo = UserManager.GetRoles(useres.Id);
+
+                if (ViewBag.roo.Count == 0)
+                {
+                    rum.UsersRole.Add("User Without Role");
+                    rum.UsersEmailName.Add(useres.Email.ToString());
+                    rum.UsersName.Add(useres.Email);
+
+                }
+
+                foreach (var i in ViewBag.roo)
+                {
+
+                    rum.UsersRole.Add(i);
+                    rum.UsersEmailName.Add(useres.Email.ToString());
+                    rum.UsersName.Add(useres.Email);
+                }
+            }
+
+            return View(rum);
+        }
+
+        // handle role for user
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleAndUserManagement(string UserNamn)
+        {
+            var roleList = db.Roles.OrderBy(r => r.Name).ToList().Select(rr => new SelectListItem
+            { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
+
+            ViewBag.Roles = roleList;
+
+            foreach (var us in db.Users)
+            {
+                if (UserNamn == us.UserName)
+                {
+                    ViewBag.UserRoles = UserManager.GetRoles(us.Id);
+                }
+            }
+
+
+            return View();
+        }
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleAndUserManagement(string UserNamn, string RoleNamn)
+        {
+            ApplicationUser use = db.Users.Where(i => i.UserName.Equals(UserNamn, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(RoleNamn) && use != null)
+            {
+                UserManager.AddToRole(use.Id, RoleNamn);
+            }
+
+            return RedirectToAction("RoleAndUserManagement", new { UserNamn = use.UserName });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleAndUserDelete(string UserNamn, string RoleNamn)
+        {
+            ApplicationUser use = db.Users.Where(i => i.UserName.Equals(UserNamn, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(RoleNamn) && use != null)
+            {
+                if (UserManager.IsInRole(use.Id, RoleNamn))
+                {
+                    UserManager.RemoveFromRole(use.Id, RoleNamn);
+                }
+                return RedirectToAction("RoleAndUserManagement", new { UserNamn = use.UserName });
+            }
+
+            return RedirectToAction("RoleUserIndex");
+        }
+
+
+        //--------------------------------------------------------------- Users have different roles - Done --------------------------------------------------------------------------------------
+
 
         //
         // GET: /Account/ForgotPassword

@@ -47,7 +47,7 @@ h5 {
 
 }
 
-/* Fix Movie Name and year in movieDetail  */
+/* Fix Book Name and year in bookDetail  */
 .coolContainerTitel  {
     float: left;
     padding-left: 0px;
@@ -119,7 +119,7 @@ h5 {
 
 
 
-/* ----------------------- Start - This is in the Movie Detail Page ---------------------------------- */
+/* ----------------------- Start - This is in the Book Detail Page ---------------------------------- */
 .dl-horizontal-SubDetails {
     margin-bottom: 65px;
     line-height: 1.75;
@@ -146,7 +146,7 @@ h5 {
         white-space: normal;
     }
 
-/* ----------------------- End - This is in the Movie Detail Page ---------------------------------- */
+/* ----------------------- End - This is in the Book Detail Page ---------------------------------- */
 
 
 /* ----------------------- Start - This is in the Profile Detail Page ---------------------------------- */
@@ -172,6 +172,6 @@ h5 {
     }
 /* ----------------------- End - This is in the Profile Detail Page ---------------------------------- */
 
-.myActorAndGenreBtn{
+.myAuthorAndGenreBtn{
     top: -45px;
 }

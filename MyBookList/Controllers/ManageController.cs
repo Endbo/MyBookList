@@ -68,7 +68,6 @@ namespace MyBookList.Controllers
             return View("Index");
         }
 
-
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)

@@ -102,3 +102,4 @@ C:\Users\Elvis\Desktop\MyBookList\MyBookList\bin\Microsoft.AspNet.Identity.Owin.
 C:\Users\Elvis\Desktop\MyBookList\MyBookList\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\Users\Elvis\Desktop\MyBookList\MyBookList\obj\Debug\MyBookList.dll
 C:\Users\Elvis\Desktop\MyBookList\MyBookList\obj\Debug\MyBookList.pdb
+C:\Users\Elvis\Desktop\MyBookList\MyBookList\obj\Debug\MyBookList.csprojResolveAssemblyReference.cache

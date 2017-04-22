@@ -8,9 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using MyBookList.Models;
 
-namespace MovieBasen.Controllers
+namespace MyBookList.Controllers
 {
-    public class ActorsController : Controller
+    public class AuthorsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 

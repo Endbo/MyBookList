@@ -8,7 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MovieBasen.Controllers
+namespace MyBookList.Controllers
 {
     public class GenresController : Controller
     {
