@@ -64,6 +64,13 @@ namespace MyBookList.Models
 
     public class RegisterViewModel
     {
+        //I have added FirstName and LastName to make a more complete user.
+        [Required]
+        [StringLength(25, MinimumLength = 2)]
+        public string Name { get; set; }
+
+        public string PhoneNumber { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

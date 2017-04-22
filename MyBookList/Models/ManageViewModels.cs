@@ -2,6 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System.Web;
+using System;
+using MyBookList.Helpers;
 
 namespace MyBookList.Models
 {
@@ -12,6 +15,24 @@ namespace MyBookList.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+
+
+        //Har selv tilføjet
+        public string Name { get; set; }
+        public string Number { get; set; }
+        public string Email { get; set; }
+        public string ProfileImagePath { get; set; }
+
+        public void SaveImage(HttpPostedFileBase image, String serverPath, String pathToFile)
+        {
+            if (image == null) return;
+
+            //ImageModel
+            Guid guid = Guid.NewGuid();
+            ImageModel.ResizeAndSave(serverPath + pathToFile, guid.ToString(), image.InputStream, 200);
+
+            ProfileImagePath = pathToFile + guid.ToString() + ".jpg";
+        }
     }
 
     public class ManageLoginsViewModel
