@@ -1,4 +1,5 @@
-﻿using MyBookList.Helpers;
+﻿
+using MyBookList.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
