@@ -554,7 +554,7 @@ namespace MyBookList.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, PhoneNumber = model.PhoneNumber}; //Added phone and name
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
