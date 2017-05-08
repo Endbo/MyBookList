@@ -59,12 +59,21 @@ namespace MyBookList.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Create(Book book, HttpPostedFileBase image)
+        public ActionResult Create(Book book, HttpPostedFileBase image, string imageUrl)
         {
             if (ModelState.IsValid)
             {
                 db.Books.Add(book);
-                book.SaveImage(image, Server.MapPath("~"), "/BookImages/");
+                if (image != null) 
+                {
+                    book.SaveImage(image, Server.MapPath("~"), "/BookImages/");
+                }
+                else
+                {
+                    //not at all a bad idea trololol security
+                    book.BookImagePath = imageUrl;
+                }
+                
 
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookApiCore.Helpers;
 using BookApiCore.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookApiCore.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowAll")]
     public class SearchController : Controller
     {
         public GoogleBookInteracton test = new GoogleBookInteracton();

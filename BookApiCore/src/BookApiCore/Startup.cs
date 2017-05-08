@@ -28,6 +28,7 @@ namespace BookApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()));
             services.AddMvc();
         }
 
@@ -36,7 +37,8 @@ namespace BookApiCore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            //fix address for launch
+            app.UseCors("AllowAll");
             app.UseMvc();
         }
     }

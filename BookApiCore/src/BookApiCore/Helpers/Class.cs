@@ -20,25 +20,40 @@ namespace BookApiCore.Helpers
         /// <returns></returns>
         public async Task<List<Book>>  DownloadBooks(string bookName, int amount)
         {
-            HttpClient client = new HttpClient();
-            string query_string = System.Net.WebUtility.HtmlEncode(bookName);
-            var byteArray = await client.GetByteArrayAsync(string.Format("https://www.googleapis.com/books/v1/volumes?q={0}&maxResults={1}", query_string, amount));
-            var bookVolume = JsonConvert.DeserializeObject<dynamic>(System.Text.Encoding.UTF8.GetString(byteArray, 0, byteArray.Length));
-
-            var books = new List<Book>();
-            foreach (var item in bookVolume.items)
+            try
             {
-                var selfLink = (string) item["selfLink"].ToString();
-                if (selfLink == null)
-                {
-                    continue;
-                }
-                var book = await ProcessBookUrl(selfLink, client);
-                books.Add(book);   
-            }
-            return books;
-        }
+                HttpClient client = new HttpClient();
+                string query_string = string.Format("https://www.googleapis.com/books/v1/volumes?maxResults={1}&q={0}&key=AIzaSyA3lKpqzD_6LDx3I1uglIyIMLq6gB0HvjA", bookName, amount);
+                var byteArray = await client.GetByteArrayAsync(query_string);
+                var bookVolume = JsonConvert.DeserializeObject<dynamic>(System.Text.Encoding.UTF8.GetString(byteArray, 0, byteArray.Length));
 
+                var books = new List<Book>();
+                foreach (var item in bookVolume.items)
+                {
+                    var selfLink = (string)item["selfLink"].ToString();
+                    if (selfLink == null)
+                    {
+                        continue;
+                    }
+                    var book = await ProcessBookUrl(selfLink, client);
+                    books.Add(book);
+                }
+                return books;
+            }
+            catch (Exception e)
+            {
+                
+                Console.WriteLine(e);
+                throw;
+            }
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="webClient"></param>
+        /// <returns></returns>
         private async Task<Book> ProcessBookUrl(string url, HttpClient webClient)
         {
             var byteArray = await webClient.GetByteArrayAsync(url);
