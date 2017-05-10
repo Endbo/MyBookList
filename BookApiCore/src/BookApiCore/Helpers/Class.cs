@@ -28,6 +28,7 @@ namespace BookApiCore.Helpers
                 var bookVolume = JsonConvert.DeserializeObject<dynamic>(System.Text.Encoding.UTF8.GetString(byteArray, 0, byteArray.Length));
 
                 var books = new List<Book>();
+                //loops over each book and requests there book
                 foreach (var item in bookVolume.items)
                 {
                     var selfLink = (string)item["selfLink"].ToString();
@@ -35,6 +36,7 @@ namespace BookApiCore.Helpers
                     {
                         continue;
                     }
+                    //should most likely not await here but it works so changing it seemed like a bad idea
                     var book = await ProcessBookUrl(selfLink, client);
                     books.Add(book);
                 }
@@ -49,7 +51,7 @@ namespace BookApiCore.Helpers
             
         }
         /// <summary>
-        /// 
+        /// requests the specified url and returns a book 
         /// </summary>
         /// <param name="url"></param>
         /// <param name="webClient"></param>
