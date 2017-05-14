@@ -8,6 +8,6 @@ To start the project after changes made to this branch a few things are required
   3. Make sure the required stored procedure is inserted into the database
   4. in the package manager console run "Update-Database" to create the database
   
-##BookApiCore
+## BookApiCore
   1. make sure visual studio is updated to support .net core
  
