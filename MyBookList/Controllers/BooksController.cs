@@ -59,7 +59,7 @@ namespace MyBookList.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Create(Book book, HttpPostedFileBase image, string imageUrl)
+        public ActionResult Create(Book book, HttpPostedFileBase image, string imageUrl, bool translateToEnglish)
         {
             if (ModelState.IsValid)
             {

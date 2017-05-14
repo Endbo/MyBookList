@@ -96,7 +96,8 @@ namespace MyBookList.Controllers
                 Name = user.Name,
                 Number = user.PhoneNumber,
                 Email = user.Email,
-                ProfileImagePath = user.ProfileImagePath
+                ProfileImagePath = user.ProfileImagePath,
+                LastLogins = user.LastLogins
             };
             return View(model);
         }

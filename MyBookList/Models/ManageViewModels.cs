@@ -23,6 +23,9 @@ namespace MyBookList.Models
         public string Email { get; set; }
         public string ProfileImagePath { get; set; }
 
+        //Sir Mittens dicking about
+        public List<UserLoginLog> LastLogins { get; set; }
+
         public void SaveImage(HttpPostedFileBase image, String serverPath, String pathToFile)
         {
             if (image == null) return;
