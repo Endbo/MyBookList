@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using MyBookList.Models;
+using System.Configuration;
 
 namespace MyBookList
 {
@@ -54,15 +55,15 @@ namespace MyBookList
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "1414123678608768",
+               appSecret: "aeaa1d20022aadde4f78f732418c294d");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "335378042274-shtnlotbq84ttkg5kepa511g4eibo71t.apps.googleusercontent.com",
+                ClientSecret = "UzlAWu-y2rLoUeiUJr2qqs6W"
+            });
         }
     }
 }

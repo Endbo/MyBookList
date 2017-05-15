@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyBookList.Models
@@ -8,6 +9,13 @@ namespace MyBookList.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        //I have added Name and phonenumber to make a more complete externallogin user.
+        [Required]
+        [StringLength(25, MinimumLength = 2)]
+        public string Name { get; set; }
+
+        public string PhoneNumber { get; set; }
     }
 
     public class ExternalLoginListViewModel
@@ -64,7 +72,7 @@ namespace MyBookList.Models
 
     public class RegisterViewModel
     {
-        //I have added FirstName and LastName to make a more complete user.
+        //I have added Name to make a more complete user.
         [Required]
         [StringLength(25, MinimumLength = 2)]
         public string Name { get; set; }
