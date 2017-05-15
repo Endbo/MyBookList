@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BookApiCore.Model;
 using Newtonsoft.Json;
@@ -87,11 +88,12 @@ namespace BookApiCore.Helpers
             {
                 cat = JBook.volumeInfo.categories.ToObject<string[]>();
             }
+            var description = Regex.Replace((JBook.volumeInfo.description ?? "").ToString(), @"<[^>]*>", String.Empty);
             var book = new Book(
                     (JBook.volumeInfo.title ?? "").ToString(),
                     authors,
                     (JBook.volumeInfo.publishedDate ?? "").ToString(),
-                    (JBook.volumeInfo.description ?? "").ToString(),
+                    description,
                     cat,
                     imagelinks,
                     (JBook.volumeInfo.language ?? "").ToString()

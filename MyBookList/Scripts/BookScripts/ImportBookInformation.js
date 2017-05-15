@@ -13,7 +13,7 @@ window.myFunction = function () {
     var name = $("#Name").val();
     if (name) {
         document.getElementById("searchButton").disabled = true;
-        $('#search-result').innerHtml = "";
+        $('#search-result').empty();
         $.ajax({
             url: "http://localhost:50297/api/search/" + name,
             context: document.body,
