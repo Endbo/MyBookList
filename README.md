@@ -2,6 +2,12 @@
 This project is created purely for a school project on the PBA software development at kea.
 
 To start the project after changes made to this branch a few things are required.
+###### Tech Stack
+- asp.net framework 4.5
+ - asp.net core 4.6
+ - MS Sql Server
+ - Jquery
+
 ## MyBookList
   1. Create a database (visual stuio - add item - sql server database)
   2. Ensure that the web config have the correct conection string
