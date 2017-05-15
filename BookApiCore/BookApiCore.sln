@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBookList", "MyBookList\MyBookList.csproj", "{511561D0-F091-4F7A-B593-F5F32454EE41}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5F4D3343-85E6-4F41-9325-3BE5B837B47B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookApiCore", "BookApiCore\src\BookApiCore\BookApiCore.xproj", "{75909DBA-B94F-4548-850A-24C65BDEC048}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{70A538C0-CC06-4627-99B1-D83F8F4794F2}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		WebEssentials2015-Settings.json = WebEssentials2015-Settings.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookApiCore", "src\BookApiCore\BookApiCore.xproj", "{75909DBA-B94F-4548-850A-24C65BDEC048}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{511561D0-F091-4F7A-B593-F5F32454EE41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{511561D0-F091-4F7A-B593-F5F32454EE41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{511561D0-F091-4F7A-B593-F5F32454EE41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{511561D0-F091-4F7A-B593-F5F32454EE41}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75909DBA-B94F-4548-850A-24C65BDEC048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75909DBA-B94F-4548-850A-24C65BDEC048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75909DBA-B94F-4548-850A-24C65BDEC048}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -24,5 +26,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{75909DBA-B94F-4548-850A-24C65BDEC048} = {5F4D3343-85E6-4F41-9325-3BE5B837B47B}
 	EndGlobalSection
 EndGlobal

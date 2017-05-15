@@ -15,6 +15,8 @@ using MyBookList.ViewModels;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
+using System.Threading;
+using MyBookList.Helpers;
 
 namespace MyBookList.Controllers
 {
@@ -82,9 +84,15 @@ namespace MyBookList.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-
+            
             if (result == SignInStatus.Success)
             {
+                //TODO: fix so the thread can correctly run in the background while a response is returned
+                var user = await UserManager.FindByNameAsync(model.Email);
+                
+                Thread test = new Thread(() => LogUserLoginInformation.LogInformation(Request.UserHostAddress, user.Id, UserManager));
+                test.Start();
+                test.Join();
                 return RedirectToAction("Index", "Books");
             }
             else
@@ -202,7 +210,18 @@ namespace MyBookList.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Name = model.Name, PhoneNumber = model.PhoneNumber, Email = model.Email };
+                //Creating the first entry into the list of logins
+                var test = new UserLoginLog()
+                {
+                    Ip = Request.UserHostAddress,
+                    CountryCode = "DK",
+                    Time = DateTime.Now
+                };
+                user.LastLogins = new List<UserLoginLog>();
+                user.LastLogins.Add(test);
+
                 var result = await UserManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);

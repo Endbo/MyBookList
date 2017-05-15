@@ -68,6 +68,16 @@
             }
             ]
         </dd>
+        <dt>
+            Last Logins
+        </dt>
+        <dd>
+        @*TODO: after fixing other issues make sure this looks good*@
+        @foreach (var item in Model.LastLogins)
+        {
+                <div class="col-md-8"> At @Html.Raw(item.Time.ToString("MM/dd/yyyy hh:mm:ss")) From @Html.Raw(item.Ip) - @Html.Raw(item.CountryName) </div>
+        }
+        </dd>
     </dl>
 </div>
 
