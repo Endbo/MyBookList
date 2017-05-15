@@ -56,8 +56,8 @@ namespace MyBookList
             //   consumerSecret: "");
 
             app.UseFacebookAuthentication(
-               appId: "1414123678608768",
-               appSecret: "aeaa1d20022aadde4f78f732418c294d");
+               appId: "2033816593518110",
+               appSecret: "9b44f72a49e45a52d3747db97abc3d02");
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
